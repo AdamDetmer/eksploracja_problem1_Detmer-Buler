@@ -3,17 +3,17 @@ from RatingLib import User, Movie
 from tqdm import tqdm
 from RatingSystem import RatingSystem, RatingSystemCompetition
 from SampleSystems import NaiveRating, AverageMovieRating, GlobalAverageMovieRating, Cheater, AverageUserRating
-# from secret_system import MySystem as secret
+from HybridSystem import HybridSystem
 
 def main():
     #read the movie indices
-    with open('../data/movie.csv', encoding='utf-8') as file:
+    with open('data/movie.csv', encoding='utf-8') as file:
         csv_reader = csv.reader(file)
         csv_reader.__next__()
         for line in csv_reader:
             Movie(int(line[0]), line[1])
     #read the user indices
-    with open('../data/rating.csv', encoding='utf-8') as file:
+    with open('data/rating.csv', encoding='utf-8') as file:
         csv_reader = csv.reader(file)
         csv_reader.__next__()
         for line in tqdm(csv_reader, total=20000263):
@@ -30,6 +30,7 @@ def main():
     competition.register(GlobalAverageMovieRating())
     competition.register(Cheater())
     competition.register(AverageUserRating())    
+    competition.register(HybridSystem(alpha=0.6))
     competition.build_round_robin()
     #run the competition - it prints out the results
     competition.compete()
